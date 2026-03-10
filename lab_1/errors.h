@@ -1,15 +1,16 @@
-#ifndef ERRORS_H
-#define ERRORS_H
+#ifndef ERRORS_H__
+#define ERRORS_H__
 
-enum error_code
+typedef enum error_code_t
 {
-    OK = 0,
-
+    ERROR_OK = 0,
     ERROR_NULL_POINTER,
     ERROR_FILE_OPEN,
     ERROR_FILE_READ,
     ERROR_MEMORY,
     ERROR_FORMAT
-};
+} error_code_t;
+
+void print_error(error_code_t error);
 
 #endif

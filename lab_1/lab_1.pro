@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    errors.cpp \
     main.cpp \
     mainwindow.cpp \
     point.cpp \
@@ -19,10 +20,13 @@ SOURCES += \
     viewer.cpp
 
 HEADERS += \
+    action.h \
+    actions.h \
     mainwindow.h \
     point.h \
     points.h \
     edge.h \
+    edges.h \
     model.h \
     file_loader.h \
     drawer.h \

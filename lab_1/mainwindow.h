@@ -1,7 +1,9 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINDOW_H__
+#define MAINWINDOW_H__
 
 #include <QMainWindow>
+
+#include "errors.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,13 +20,12 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_button_rotate_clicked();
-
+    error_code_t draw();
     void on_button_move_clicked();
-
     void on_button_scale_clicked();
+    void on_button_rotate_clicked();
 
 private:
     Ui::MainWindow *ui;
 };
-#endif // MAINWINDOW_H
+#endif
