@@ -19,6 +19,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private:
+    void on_action_open_clicked();
+    void on_action_save_clicked();
+
 private slots:
     error_code_t draw();
     void on_button_move_clicked();
