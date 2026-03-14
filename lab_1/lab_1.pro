@@ -9,15 +9,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    actions.cpp \
     errors.cpp \
     main.cpp \
     mainwindow.cpp \
     point.cpp \
     points.cpp \
     model.cpp \
-    file_loader.cpp \
-    drawer.cpp \
-    viewer.cpp
+    drawer.cpp
 
 HEADERS += \
     action.h \
@@ -28,9 +27,7 @@ HEADERS += \
     edge.h \
     edges.h \
     model.h \
-    file_loader.h \
     drawer.h \
-    viewer.h \
     errors.h
 
 FORMS += \

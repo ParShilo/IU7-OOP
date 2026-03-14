@@ -3,10 +3,11 @@
 
 #include "errors.h"
 #include "action.h"
+#include "drawer.h"
 
 enum action
 {
-    OPEN = 0,
+    OPEN,
     SAVE,
     DRAW,
     SCALE,
@@ -18,7 +19,7 @@ enum action
 typedef struct request_t
 {
     enum action action;
-    //drawing_view_t view;
+    scene_t scene;
     union
     {
         const char *file_name;

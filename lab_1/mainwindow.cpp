@@ -12,6 +12,17 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QGraphicsScene *scene = new QGraphicsScene(this);
+
+    ui->graphicsView->setScene(scene);
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+
+    connect(ui->action_open, &QAction::triggered, this, &MainWindow::on_action_open_clicked);
+    connect(ui->action_save, &QAction::triggered, this, &MainWindow::on_action_save_clicked);
+    connect(ui->button_scale, &QPushButton::clicked, this, &MainWindow::on_button_scale_clicked);
+    connect(ui->button_move, &QPushButton::clicked, this, &MainWindow::on_button_move_clicked);
+    connect(ui->button_rotate, &QPushButton::clicked, this, &MainWindow::on_button_rotate_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -22,6 +33,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+static double radian(const double angle)
+{
+    return angle * (M_PI / 180);
+}
+
+// Рисовать
 error_code_t MainWindow::draw()
 {
     auto rcontent = ui->graphicsView->contentsRect();
@@ -29,16 +46,16 @@ error_code_t MainWindow::draw()
 
     request_t request;
     request.action = DRAW;
-    request.view = {
+    request.scene = {
         .scene = ui->graphicsView->scene(),
         .width = ui->graphicsView->scene()->width(),
-        .height = ui->graphicsView->scene()->height(),
-        .line_color = Qt::black
+        .height = ui->graphicsView->scene()->height()
     };
 
     return choose_action(request);
 }
 
+// Перенести
 void MainWindow::on_button_move_clicked()
 {
     request_t request;
@@ -58,11 +75,7 @@ void MainWindow::on_button_move_clicked()
     }
 }
 
-static double radian(const double angle)
-{
-    return angle * (M_PI / 180);
-}
-
+// Повернуть
 void MainWindow::on_button_rotate_clicked()
 {
     request_t request;
@@ -82,6 +95,7 @@ void MainWindow::on_button_rotate_clicked()
     }
 }
 
+// Масштабировать
 void MainWindow::on_button_scale_clicked()
 {
     request_t request;
@@ -101,6 +115,7 @@ void MainWindow::on_button_scale_clicked()
     }
 }
 
+// Открыть файл
 void MainWindow::on_action_open_clicked()
 {
     QString path = QFileDialog::getOpenFileName();
@@ -121,6 +136,7 @@ void MainWindow::on_action_open_clicked()
     }
 }
 
+// Сохранить файл
 void MainWindow::on_action_save_clicked()
 {
     QString path = QFileDialog::getSaveFileName();
