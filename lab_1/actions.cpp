@@ -1,10 +1,12 @@
 #include "actions.h"
 #include "model.h"
+#include "drawer.h"
+#include "loader.h"
 
-error_code_t choose_option(request_t &request)
+error_code_t choose_action(request_t &request)
 {
     error_code_t rc = ERROR_OK;
-    model_t model = create_initialized_model();
+    static model_t model = model_create();
 
     switch (request.action)
     {

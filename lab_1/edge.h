@@ -1,12 +1,12 @@
 #ifndef EDGE_H__
 #define EDGE_H__
 
-#include "errors.h"
+#include <cstdio>
 
 typedef struct edge_t
 {
-    int start_ind;
-    int end_ind;
+    size_t start_ind;
+    size_t end_ind;
 } edge_t;
 
 #endif

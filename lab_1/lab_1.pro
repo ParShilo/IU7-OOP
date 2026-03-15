@@ -10,24 +10,27 @@ CONFIG += c++17
 
 SOURCES += \
     actions.cpp \
+    edges.cpp \
     errors.cpp \
     main.cpp \
     mainwindow.cpp \
     point.cpp \
     points.cpp \
     model.cpp \
+    loader.cpp \
     drawer.cpp
 
 HEADERS += \
     action.h \
     actions.h \
+    edges.h \
     mainwindow.h \
     point.h \
     points.h \
     edge.h \
-    edges.h \
     model.h \
     drawer.h \
+    loader.h \
     errors.h
 
 FORMS += \

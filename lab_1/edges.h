@@ -11,4 +11,8 @@ typedef struct edges_t
     size_t count;
 } edges_t;
 
+void edges_init(edges_t &edges);
+void edges_free(edges_t &edges);
+error_code_t edges_allocate(edge_t *&edges, size_t count);
+
 #endif
