@@ -22,10 +22,10 @@ typedef struct request_t
     scene_t scene;
     union
     {
-        const char *file_name;
         move_t move;
         scale_t scale;
         rotate_t rotate;
+        const char *file_name;
     };
 } request_t;
 

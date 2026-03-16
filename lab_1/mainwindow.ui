@@ -2326,6 +2326,9 @@
           </disabled>
          </palette>
         </property>
+        <property name="value">
+         <double>1.500000000000000</double>
+        </property>
        </widget>
       </item>
       <item>
@@ -2529,6 +2532,9 @@
           </disabled>
          </palette>
         </property>
+        <property name="value">
+         <double>1.500000000000000</double>
+        </property>
        </widget>
       </item>
       <item>
@@ -2731,6 +2737,9 @@
            </colorrole>
           </disabled>
          </palette>
+        </property>
+        <property name="value">
+         <double>1.500000000000000</double>
         </property>
        </widget>
       </item>

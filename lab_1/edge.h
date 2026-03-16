@@ -5,8 +5,8 @@
 
 typedef struct edge_t
 {
-    size_t start_ind;
-    size_t end_ind;
+    size_t first_ind;
+    size_t second_ind;
 } edge_t;
 
 #endif

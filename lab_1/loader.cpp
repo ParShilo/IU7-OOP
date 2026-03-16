@@ -251,8 +251,8 @@ error_code_t edge_read(edge_t &edge, FILE *file)
             rc = ERROR_INPUT_EDGES;
         else
         {
-            edge.start_ind = start;
-            edge.end_ind = end;
+            edge.first_ind = start;
+            edge.second_ind = end;
         }
     }
 
@@ -266,7 +266,7 @@ error_code_t edge_save(FILE *file, const edge_t &edge)
         rc = ERROR_ARGS;
     else
     {
-        if (fprintf(file, "%zu %zu\n", edge.start_ind, edge.end_ind) < 0)
+        if (fprintf(file, "%zu %zu\n", edge.first_ind, edge.second_ind) < 0)
             rc = ERROR_FILE_WRITE;
     }
     return rc;
