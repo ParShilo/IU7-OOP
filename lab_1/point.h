@@ -11,9 +11,18 @@ typedef struct point_t
     double z;
 } point_t;
 
+typedef struct rotating
+{
+    double cos_value;
+    double sin_value;
+} rotating;
+
 void point_init(point_t &point);
-void point_scale(point_t &point, const point_t &center, const scale_t &scale_data);
-void point_move(point_t &point, const move_t &move);
-void point_rotate(point_t &point, const point_t &center, const rotate_t &rotate);
+void point_scale(point_t &point, const point_t &center, const scale_data_t &scale_data);
+void point_move(point_t &point, const move_data_t &move);
+void point_rotate(point_t &point, const point_t &center, const rotate_data_t &rotate);
+
+void point_accumulate(point_t &dst, const point_t &src);
+void point_div_scalar(point_t &point, double divisor);
 
 #endif

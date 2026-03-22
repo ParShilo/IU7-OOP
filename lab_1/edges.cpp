@@ -19,7 +19,7 @@ error_code_t edges_allocate(edge_t *&edges, size_t count)
     error_code_t rc = ERROR_OK;
 
     if (count <= 0)
-        rc = ERROR_ARGS;
+        rc = ERROR_EDGES;
     else
     {
         edges = (edge_t *) malloc(count * sizeof(edge_t));

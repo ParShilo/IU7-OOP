@@ -16,19 +16,19 @@ enum action
     EXIT
 };
 
-typedef struct request_t
+typedef struct task_t
 {
     enum action action;
-    scene_t scene;
     union
     {
-        move_t move;
-        scale_t scale;
-        rotate_t rotate;
+        move_data_t move;
+        scale_data_t scale;
+        rotate_data_t rotate;
         const char *file_name;
     };
-} request_t;
+    scene_t scene;
+} task_t;
 
-error_code_t choose_action(request_t &request);
+error_code_t choose_action(task_t &task);
 
 #endif

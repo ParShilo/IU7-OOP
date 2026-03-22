@@ -5,7 +5,7 @@
 error_code_t model_download(model_t &model, const char *filename)
 {
     if (filename == NULL)
-        return ERROR_ARGS;
+        return ERROR_FILENAME;
 
     error_code_t rc = ERROR_OK;
 
@@ -32,7 +32,7 @@ error_code_t model_download(model_t &model, const char *filename)
 error_code_t model_read(model_t &model, FILE *file)
 {
     if (file == NULL)
-        return ERROR_ARGS;
+        return ERROR_FILE;
 
     error_code_t rc = ERROR_OK;
 
@@ -56,7 +56,7 @@ error_code_t model_read(model_t &model, FILE *file)
 error_code_t model_save(model_t &model, const char *filename)
 {
     if (filename == NULL)
-        return ERROR_ARGS;
+        return ERROR_FILENAME;
 
     error_code_t rc = ERROR_OK;
 
@@ -81,7 +81,7 @@ error_code_t points_read_amount(size_t &count, FILE *file)
     int temp_count = 0;
 
     if (file == NULL)
-        rc = ERROR_ARGS;
+        rc = ERROR_FILE;
     else if (fscanf(file, "%d", &temp_count) != 1)
         rc = ERROR_INPUT_POINTS;
     else if (temp_count <= 0)
@@ -94,8 +94,10 @@ error_code_t points_read_data(point_t *points, size_t count, FILE *file)
 {
     error_code_t rc = ERROR_OK;
 
-    if (file == NULL || count <= 0 || points == NULL)
-        rc = ERROR_ARGS;
+    if (file == NULL)
+        rc = ERROR_FILE;
+    else if (count <= 0 || points == NULL)
+        rc = ERROR_POINTS;
     else
         for (size_t i = 0; rc == ERROR_OK && i < count; i++)
             rc = point_read(points[i], file);
@@ -105,7 +107,7 @@ error_code_t points_read_data(point_t *points, size_t count, FILE *file)
 error_code_t points_read(points_t &points, FILE *file)
 {
     if (file == NULL)
-        return ERROR_ARGS;
+        return ERROR_FILE;
 
     error_code_t rc = points_read_amount(points.count, file);
     if (rc == ERROR_OK)
@@ -122,8 +124,10 @@ error_code_t points_read(points_t &points, FILE *file)
 }
 error_code_t points_save(const points_t &points, FILE *file)
 {
-    if (file == NULL || points.arr == NULL || points.count <= 0)
-        return ERROR_ARGS;
+    if (file == NULL)
+        return ERROR_FILE;
+    if (points.arr == NULL || points.count <= 0)
+        return ERROR_POINTS;
 
     error_code_t rc = ERROR_OK;
 
@@ -144,7 +148,7 @@ error_code_t edges_read_amount(size_t &count, FILE *file)
     int temp_count = 0;
 
     if (file == NULL)
-        rc = ERROR_ARGS;
+        rc = ERROR_FILE;
     else if (fscanf(file, "%d", &temp_count) != 1)
         rc = ERROR_INPUT_EDGES;
     else if (temp_count <= 0)
@@ -157,8 +161,10 @@ error_code_t edges_read_data(edge_t *edges, size_t count, FILE *file)
 {
     error_code_t rc = ERROR_OK;
 
-    if (file == NULL || count <= 0 || edges == NULL)
-        rc = ERROR_ARGS;
+    if (file == NULL)
+        rc = ERROR_FILE;
+    else if (count <= 0 || edges == NULL)
+        rc = ERROR_EDGES;
     else
         for (size_t i = 0; rc == ERROR_OK && i < count; i++)
             rc = edge_read(edges[i], file);
@@ -168,7 +174,7 @@ error_code_t edges_read_data(edge_t *edges, size_t count, FILE *file)
 error_code_t edges_read(edges_t &edges, FILE *file)
 {
     if (file == NULL)
-        return ERROR_ARGS;
+        return ERROR_FILE;
 
     error_code_t rc = edges_read_amount(edges.count, file);
     if (rc == ERROR_OK)
@@ -185,8 +191,10 @@ error_code_t edges_read(edges_t &edges, FILE *file)
 }
 error_code_t edges_save(const edges_t &edges, FILE *file)
 {
-    if (file == NULL || edges.arr == NULL || edges.count <= 0)
-        return ERROR_ARGS;
+    if (file == NULL)
+        return ERROR_FILE;
+    if (edges.arr == NULL || edges.count <= 0)
+        return ERROR_EDGES;
 
     error_code_t rc = ERROR_OK;
 
@@ -205,7 +213,7 @@ error_code_t point_read(point_t &point, FILE *file)
     error_code_t rc = ERROR_OK;
 
     if (file == NULL)
-        rc = ERROR_ARGS;
+        rc = ERROR_FILE;
     else
     {
         double x, y, z;
@@ -227,7 +235,7 @@ error_code_t point_save(FILE* file, const point_t &point)
     error_code_t rc = ERROR_OK;
 
     if (file == NULL)
-        rc = ERROR_ARGS;
+        rc = ERROR_FILE;
     else
     {
         if (fprintf(file, "%lf %lf %lf\n", point.x, point.y, point.z) < 0)
@@ -242,7 +250,7 @@ error_code_t edge_read(edge_t &edge, FILE *file)
     error_code_t rc = ERROR_OK;
 
     if (file == NULL)
-        rc = ERROR_ARGS;
+        rc = ERROR_FILE;
     else
     {
         int start, end;
@@ -263,7 +271,7 @@ error_code_t edge_save(FILE *file, const edge_t &edge)
     error_code_t rc = ERROR_OK;
 
     if (file == NULL)
-        rc = ERROR_ARGS;
+        rc = ERROR_FILE;
     else
     {
         if (fprintf(file, "%zu %zu\n", edge.first_ind, edge.second_ind) < 0)

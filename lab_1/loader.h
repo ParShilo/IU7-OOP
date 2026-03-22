@@ -14,7 +14,7 @@ error_code_t points_read(points_t &points, FILE *file);
 error_code_t points_save(const points_t &points, FILE *file);
 
 error_code_t edges_read_amount(size_t &count, FILE *file);
-error_code_t edges_read_data(edges_t *edges, size_t count, FILE *file);
+error_code_t edges_read_data(edge_t *edges, size_t count, FILE *file);
 error_code_t edges_read(edges_t &edges, FILE *file);
 error_code_t edges_save(const edges_t &edges, FILE *file);
 

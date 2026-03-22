@@ -17,8 +17,8 @@ error_code_t points_allocate(point_t *&arr_points, size_t count);
 
 error_code_t calculate_center(point_t &center, const points_t &points);
 
-error_code_t points_move(points_t &points, point_t &center, const move_t &move);
-error_code_t points_scale(points_t &points, const point_t &center, const scale_t &scale);
-error_code_t points_rotate(points_t &points, const point_t &center, const rotate_t &rotate);
+error_code_t points_move(points_t &points, point_t &center, const move_data_t &move);
+error_code_t points_scale(points_t &points, const point_t &center, const scale_data_t &scale);
+error_code_t points_rotate(points_t &points, const point_t &center, const rotate_data_t &rotate);
 
 #endif

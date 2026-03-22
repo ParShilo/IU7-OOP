@@ -22,7 +22,7 @@ void model_free(model_t &model)
     edges_free(model.edges);
 }
 
-error_code_t model_scale(model_t &model, const scale_t &scale)
+error_code_t model_scale(model_t &model, const scale_data_t &scale)
 {
     error_code_t rc = points_scale(model.points, model.center, scale);
     if (rc == ERROR_OK)
@@ -31,7 +31,7 @@ error_code_t model_scale(model_t &model, const scale_t &scale)
     return rc;
 }
 
-error_code_t model_move(model_t &model, const move_t &move)
+error_code_t model_move(model_t &model, const move_data_t &move)
 {
     error_code_t rc = points_move(model.points, model.center, move);
     if (rc == ERROR_OK)
@@ -40,7 +40,7 @@ error_code_t model_move(model_t &model, const move_t &move)
     return rc;
 }
 
-error_code_t model_rotate(model_t &model, const rotate_t &rotate)
+error_code_t model_rotate(model_t &model, const rotate_data_t &rotate)
 {
     error_code_t rc = points_rotate(model.points, model.center, rotate);
     if (rc == ERROR_OK)

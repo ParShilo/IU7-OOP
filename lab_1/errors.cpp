@@ -8,9 +8,6 @@ void print_error(error_code_t error)
     case ERROR_ACTION:
         QMessageBox::critical(NULL, "Ошибка", "Ошибка действия");
         break;
-    case ERROR_ARGS:
-        QMessageBox::critical(NULL, "Ошибка", "Ошибка аргументов функции");
-        break;
     case ERROR_INPUT_POINTS:
         QMessageBox::critical(NULL, "Ошибка", "Ошибка чтения точек из файла");
         break;
@@ -31,6 +28,24 @@ void print_error(error_code_t error)
         break;
     case ERROR_MEMORY:
         QMessageBox::critical(NULL, "Ошибка", "Ошибка выделения памяти");
+        break;
+    case ERROR_SCENE:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка обработки сцены");
+        break;
+    case ERROR_POINTS:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка обработки точек");
+        break;
+    case ERROR_EDGE_INDEX:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка использования ребра: некорректные индексы");
+        break;
+    case ERROR_EDGES:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка обработки рёбер");
+        break;
+    case ERROR_FILE:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка работы с файлом");
+        break;
+    case ERROR_FILENAME:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка с именем файла");
         break;
     default:
         QMessageBox::critical(NULL, "Ошибка", "Неизвестная ошибка");

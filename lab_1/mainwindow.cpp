@@ -27,9 +27,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 MainWindow::~MainWindow()
 {
-    request_t request;
-    request.action = EXIT;
-    choose_action(request);
+    task_t task;
+    task.action = EXIT;
+    choose_action(task);
     delete ui;
 }
 
@@ -44,27 +44,27 @@ error_code_t MainWindow::draw()
     auto rcontent = ui->graphicsView->contentsRect();
     ui->graphicsView->scene()->setSceneRect(0, 0, rcontent.width(), rcontent.height());
 
-    request_t request;
-    request.action = DRAW;
-    request.scene = {
+    task_t task;
+    task.action = DRAW;
+    task.scene = {
         .scene = ui->graphicsView->scene(),
         .width = ui->graphicsView->scene()->width(),
         .height = ui->graphicsView->scene()->height()
     };
 
-    return choose_action(request);
+    return choose_action(task);
 }
 
 // Перенести
 void MainWindow::on_button_move_clicked()
 {
-    request_t request;
-    request.action = MOVE;
-    request.move = {.dx = ui->move_x->value(),
-                    .dy = ui->move_y->value(),
-                    .dz = ui->move_z->value()};
+    task_t task;
+    task.action = MOVE;
+    task.move = {.dx = ui->move_x->value(),
+                 .dy = ui->move_y->value(),
+                 .dz = ui->move_z->value()};
 
-    error_code_t rc = choose_action(request);
+    error_code_t rc = choose_action(task);
     if (rc)
         print_error(rc);
     else
@@ -78,13 +78,13 @@ void MainWindow::on_button_move_clicked()
 // Повернуть
 void MainWindow::on_button_rotate_clicked()
 {
-    request_t request;
-    request.action = ROTATE;
-    request.rotate = {.angle_x = radian(ui->rotate_x->value()),
-                      .angle_y = radian(ui->rotate_y->value()),
-                      .angle_z = radian(ui->rotate_z->value())};
+    task_t task;
+    task.action = ROTATE;
+    task.rotate = {.angle_x = radian(ui->rotate_x->value()),
+                   .angle_y = radian(ui->rotate_y->value()),
+                   .angle_z = radian(ui->rotate_z->value())};
 
-    error_code_t rc = choose_action(request);
+    error_code_t rc = choose_action(task);
     if (rc)
         print_error(rc);
     else
@@ -98,13 +98,13 @@ void MainWindow::on_button_rotate_clicked()
 // Масштабировать
 void MainWindow::on_button_scale_clicked()
 {
-    request_t request;
-    request.action = SCALE;
-    request.scale = {.kx = ui->scale_x->value(),
-                     .ky = ui->scal_y->value(),
-                     .kz = ui->scale_z->value()};
+    task_t task;
+    task.action = SCALE;
+    task.scale = {.kx = ui->scale_x->value(),
+                  .ky = ui->scal_y->value(),
+                  .kz = ui->scale_z->value()};
 
-    error_code_t rc = choose_action(request);
+    error_code_t rc = choose_action(task);
     if (rc)
         print_error(rc);
     else
@@ -119,13 +119,13 @@ void MainWindow::on_button_scale_clicked()
 void MainWindow::on_action_open_clicked()
 {
     QString path = QFileDialog::getOpenFileName();
-    request_t request;
-    request.action = OPEN;
+    task_t task;
+    task.action = OPEN;
 
     QByteArray ba = path.toLocal8Bit();
-    request.file_name = ba.data();
+    task.file_name = ba.data();
 
-    error_code_t rc = choose_action(request);
+    error_code_t rc = choose_action(task);
     if (rc)
         print_error(rc);
     else
@@ -140,11 +140,11 @@ void MainWindow::on_action_open_clicked()
 void MainWindow::on_action_save_clicked()
 {
     QString path = QFileDialog::getSaveFileName();
-    request_t request;
-    request.action = SAVE;
-    request.file_name = path.toUtf8().data();
+    task_t task;
+    task.action = SAVE;
+    task.file_name = path.toUtf8().data();
 
-    error_code_t rc = choose_action(request);
+    error_code_t rc = choose_action(task);
     if (rc)
         print_error(rc);
     else
