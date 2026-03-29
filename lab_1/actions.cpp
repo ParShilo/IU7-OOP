@@ -23,7 +23,7 @@ error_code_t choose_action(task_t &task)
         rc = model_rotate(model, task.rotate);
         break;
     case OPEN:
-        rc = model_download(model, task.file_name);
+        rc = model_open(model, task.file_name);
         break;
     case SAVE:
         rc = model_save(model, task.file_name);

@@ -38,7 +38,7 @@ static void average_points(point_t &center, const point_t *points, const size_t 
     for (size_t i = 0; i < count; i++)
         point_accumulate(center, points[i]);
 
-    point_div_scalar(center, (double) count);
+    point_div(center, (double) count);
 }
 
 error_code_t calculate_center(point_t &center, const points_t &points)

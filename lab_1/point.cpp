@@ -8,20 +8,6 @@ void point_init(point_t &point)
     point.z = 0.0;
 }
 
-static void to_origin(point_t &point, const point_t &center)
-{
-    point.x -= center.x;
-    point.y -= center.y;
-    point.z -= center.z;
-}
-
-static void from_origin(point_t &point, const point_t &center)
-{
-    point.x += center.x;
-    point.y += center.y;
-    point.z += center.z;
-}
-
 static void calculate_rotation(double &a, double &b, const rotating value)
 {
     double temp_a = a;
@@ -65,30 +51,32 @@ void point_move(point_t &point, const move_data_t &move)
 
 void point_scale(point_t &point, const point_t &center, const scale_data_t &scale)
 {
-    to_origin(point, center);
+    point_t temp_center = {-center.x, -center.y, -center.z};
+    point_accumulate(point, temp_center);
     calculate_scaling(point, scale);
-    from_origin(point, center);
+    point_accumulate(point, center);
 }
 
 void point_rotate(point_t &point, const point_t &center, const rotate_data_t &rotate)
 {
-    to_origin(point, center);
+    point_t temp_center = {-center.x, -center.y, -center.z};
+    point_accumulate(point, temp_center);
 
     rotate_x(point, rotate.angle_x);
     rotate_y(point, rotate.angle_y);
     rotate_z(point, rotate.angle_z);
 
-    from_origin(point, center);
+    point_accumulate(point, center);
 }
 
-void point_accumulate(point_t &dst, const point_t &src)
+void point_accumulate(point_t &point_1, const point_t &point_2)
 {
-    dst.x += src.x;
-    dst.y += src.y;
-    dst.z += src.z;
+    point_1.x += point_2.x;
+    point_1.y += point_2.y;
+    point_1.z += point_2.z;
 }
 
-void point_div_scalar(point_t &point, double divisor)
+void point_div(point_t &point, double divisor)
 {
     point.x /= divisor;
     point.y /= divisor;

@@ -49,4 +49,7 @@ error_code_t model_rotate(model_t &model, const rotate_data_t &rotate)
     return rc;
 }
 
-
+error_code_t model_calculate(model_t &model)
+{
+    return calculate_center(model.center, model.points);
+}

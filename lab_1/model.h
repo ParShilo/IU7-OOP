@@ -19,4 +19,6 @@ error_code_t model_scale(model_t &model, const scale_data_t &scale);
 error_code_t model_move(model_t &model, const move_data_t &move);
 error_code_t model_rotate(model_t &model, const rotate_data_t &rotate);
 
+error_code_t model_calculate(model_t &model);
+
 #endif

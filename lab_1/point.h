@@ -23,6 +23,6 @@ void point_move(point_t &point, const move_data_t &move);
 void point_rotate(point_t &point, const point_t &center, const rotate_data_t &rotate);
 
 void point_accumulate(point_t &dst, const point_t &src);
-void point_div_scalar(point_t &point, double divisor);
+void point_div(point_t &point, double divisor);
 
 #endif
