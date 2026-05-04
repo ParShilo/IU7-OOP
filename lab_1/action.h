@@ -1,13 +1,6 @@
 #ifndef ACTION_H__
 #define ACTION_H__
 
-typedef struct move_data_t
-{
-    double dx;
-    double dy;
-    double dz;
-} move_data_t;
-
 typedef struct scale_data_t
 {
     double kx;

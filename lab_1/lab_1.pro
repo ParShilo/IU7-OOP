@@ -18,7 +18,8 @@ SOURCES += \
     points.cpp \
     model.cpp \
     loader.cpp \
-    drawer.cpp
+    drawer.cpp \
+    qt_drawer.cpp
 
 HEADERS += \
     action.h \
@@ -31,7 +32,8 @@ HEADERS += \
     model.h \
     drawer.h \
     loader.h \
-    errors.h
+    errors.h \
+    qt_drawer.h
 
 FORMS += \
     mainwindow.ui

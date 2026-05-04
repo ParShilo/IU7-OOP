@@ -15,6 +15,7 @@ typedef enum error_code_t
     ERROR_FILE_WRITE,
     ERROR_MEMORY,
     ERROR_SCENE,
+    ERROR_SCENE_SIZES,
     ERROR_POINTS,
     ERROR_EDGES,
     ERROR_EDGE_INDEX

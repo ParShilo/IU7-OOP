@@ -24,32 +24,20 @@ void model_free(model_t &model)
 
 error_code_t model_scale(model_t &model, const scale_data_t &scale)
 {
-    error_code_t rc = points_scale(model.points, model.center, scale);
-    if (rc == ERROR_OK)
-        rc = calculate_center(model.center, model.points);
-
-    return rc;
+    return points_scale(model.points, model.center, scale);
 }
 
-error_code_t model_move(model_t &model, const move_data_t &move)
+error_code_t model_move(model_t &model, const point_t &move)
 {
-    error_code_t rc = points_move(model.points, model.center, move);
-    if (rc == ERROR_OK)
-        rc = calculate_center(model.center, model.points);
-
-    return rc;
+    return points_move(model.points, model.center, move);
 }
 
 error_code_t model_rotate(model_t &model, const rotate_data_t &rotate)
 {
-    error_code_t rc = points_rotate(model.points, model.center, rotate);
-    if (rc == ERROR_OK)
-        rc = calculate_center(model.center, model.points);
-
-    return rc;
+    return points_rotate(model.points, model.center, rotate);
 }
 
-error_code_t model_calculate(model_t &model)
+error_code_t model_calculate_center(model_t &model)
 {
     return calculate_center(model.center, model.points);
 }

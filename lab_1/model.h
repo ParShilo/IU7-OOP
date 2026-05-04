@@ -16,9 +16,9 @@ void model_init(model_t &model);
 void model_free(model_t &model);
 
 error_code_t model_scale(model_t &model, const scale_data_t &scale);
-error_code_t model_move(model_t &model, const move_data_t &move);
+error_code_t model_move(model_t &model, const point_t &move);
 error_code_t model_rotate(model_t &model, const rotate_data_t &rotate);
 
-error_code_t model_calculate(model_t &model);
+error_code_t model_calculate_center(model_t &model);
 
 #endif

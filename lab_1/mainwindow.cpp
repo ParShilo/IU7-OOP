@@ -38,7 +38,6 @@ static double radian(const double angle)
     return angle * (M_PI / 180);
 }
 
-// Рисовать
 error_code_t MainWindow::draw()
 {
     auto rcontent = ui->graphicsView->contentsRect();
@@ -55,14 +54,13 @@ error_code_t MainWindow::draw()
     return choose_action(task);
 }
 
-// Перенести
 void MainWindow::on_button_move_clicked()
 {
     task_t task;
     task.action = MOVE;
-    task.move = {.dx = ui->move_x->value(),
-                 .dy = ui->move_y->value(),
-                 .dz = ui->move_z->value()};
+    task.move = {.x = ui->move_x->value(),
+                 .y = -1 * ui->move_y->value(),
+                 .z = ui->move_z->value()};
 
     error_code_t rc = choose_action(task);
     if (rc)
@@ -95,7 +93,6 @@ void MainWindow::on_button_rotate_clicked()
     }
 }
 
-// Масштабировать
 void MainWindow::on_button_scale_clicked()
 {
     task_t task;
@@ -115,7 +112,6 @@ void MainWindow::on_button_scale_clicked()
     }
 }
 
-// Открыть файл
 void MainWindow::on_action_open_clicked()
 {
     QString path = QFileDialog::getOpenFileName();
@@ -136,7 +132,6 @@ void MainWindow::on_action_open_clicked()
     }
 }
 
-// Сохранить файл
 void MainWindow::on_action_save_clicked()
 {
     QString path = QFileDialog::getSaveFileName();

@@ -21,7 +21,7 @@ typedef struct task_t
     enum action action;
     union
     {
-        move_data_t move;
+        point_t move;
         scale_data_t scale;
         rotate_data_t rotate;
         const char *file_name;

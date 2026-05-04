@@ -32,6 +32,9 @@ void print_error(error_code_t error)
     case ERROR_SCENE:
         QMessageBox::critical(NULL, "Ошибка", "Ошибка обработки сцены");
         break;
+    case ERROR_SCENE_SIZES:
+        QMessageBox::critical(NULL, "Ошибка", "Ошибка обработки размеров сцены");
+        break;
     case ERROR_POINTS:
         QMessageBox::critical(NULL, "Ошибка", "Ошибка обработки точек");
         break;

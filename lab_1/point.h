@@ -19,10 +19,9 @@ typedef struct rotating
 
 void point_init(point_t &point);
 void point_scale(point_t &point, const point_t &center, const scale_data_t &scale_data);
-void point_move(point_t &point, const move_data_t &move);
+void point_move(point_t &point, const point_t &move);
 void point_rotate(point_t &point, const point_t &center, const rotate_data_t &rotate);
 
-void point_accumulate(point_t &dst, const point_t &src);
 void point_div(point_t &point, double divisor);
 
 #endif

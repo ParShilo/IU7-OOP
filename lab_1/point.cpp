@@ -10,11 +10,11 @@ void point_init(point_t &point)
 
 static void calculate_rotation(double &a, double &b, const rotating value)
 {
-    double temp_a = a;
-    double temp_b = b;
+    double ta = a;
+    double tb = b;
 
-    a = temp_a * value.cos_value + temp_b * value.sin_value;
-    b = -temp_a * value.sin_value + temp_b * value.cos_value;
+    a = ta * value.cos_value + tb * value.sin_value;
+    b = -ta * value.sin_value + tb * value.cos_value;
 }
 
 static void rotate_x(point_t &point, const double angle_rad)
@@ -42,38 +42,27 @@ static void calculate_scaling(point_t &point, const scale_data_t &scale)
     point.z *= scale.kz;
 }
 
-void point_move(point_t &point, const move_data_t &move)
+void point_move(point_t &point, const point_t &move)
 {
-    point.x += move.dx;
-    point.y += move.dy;
-    point.z += move.dz;
+    point.x += move.x;
+    point.y += move.y;
+    point.z += move.z;
 }
 
 void point_scale(point_t &point, const point_t &center, const scale_data_t &scale)
 {
-    point_t temp_center = {-center.x, -center.y, -center.z};
-    point_accumulate(point, temp_center);
+    point_move(point, {-center.x, -center.y, -center.z});
     calculate_scaling(point, scale);
-    point_accumulate(point, center);
+    point_move(point, center);
 }
 
 void point_rotate(point_t &point, const point_t &center, const rotate_data_t &rotate)
 {
-    point_t temp_center = {-center.x, -center.y, -center.z};
-    point_accumulate(point, temp_center);
-
+    point_move(point, {-center.x, -center.y, -center.z});
     rotate_x(point, rotate.angle_x);
     rotate_y(point, rotate.angle_y);
     rotate_z(point, rotate.angle_z);
-
-    point_accumulate(point, center);
-}
-
-void point_accumulate(point_t &point_1, const point_t &point_2)
-{
-    point_1.x += point_2.x;
-    point_1.y += point_2.y;
-    point_1.z += point_2.z;
+    point_move(point, center);
 }
 
 void point_div(point_t &point, double divisor)
