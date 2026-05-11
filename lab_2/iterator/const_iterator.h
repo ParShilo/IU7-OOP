@@ -2,8 +2,7 @@
 #define CONST_ITERATOR_H
 
 #include "base_iterator.h"
-#include "../exception/exceptions.h"
-#include "../list/list.h"
+#include "exceptions.h"
 
 template <CopyMoveAssignable T>
 class List;
@@ -15,13 +14,8 @@ template <CopyMoveAssignable T>
 class ConstIterator : public BaseIterator<T> 
 {
 public:
-    #pragma region aliases
     using pointer = const std::shared_ptr<T>;
     using reference = const T&;
-    using value_type = T;
-    using iterator_category = std::forward_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-    #pragma endregion
 
     #pragma region ConstIterator
     ConstIterator() noexcept;
@@ -47,7 +41,6 @@ public:
     void validate_ptr() const;
 
     ~ConstIterator() = default;
-
 };
 
 #include "const_iterator.hpp"

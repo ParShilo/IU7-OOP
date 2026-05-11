@@ -3,7 +3,7 @@
 #include <vector>
 #include <ranges>
 
-#include "./list/list.h"
+#include "list.h"
 
 void test_list()
 {
@@ -32,7 +32,7 @@ void test_list()
     List<int> copied(initList);
     assert(copied == initList);
 
-    // Конструктор
+    // Конструктор переноса
     List<int> moved(std::move(initList));
     assert(moved.size() == 3);
     assert(initList.empty());
@@ -161,15 +161,16 @@ void test_list()
 
     // Оператор +
     List<int> base{1, 2};
-    List<int> result = base.plus(3).plus(List<int>{4, 5});
-    int expected[] = {1, 2, 3, 4, 5};
+    List<int> result = 0 + base + List<int>{3, 4} + 5;
+    int expected[] = {0, 1, 2, 3, 4, 5};
     int i = 0;
     for (int val : result) assert(val == expected[i++]);
 
-    std::cout << "All tests passed!\n";
+    std::cout << "Все тесты прошли!\n";
 }
 
-int main() {
+int main(void)
+{
     test_list();
     return 0;
 }

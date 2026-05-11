@@ -20,7 +20,8 @@ template <typename It>
 concept InputIterator = std::input_iterator<It>; 
 
 template <typename C>
-concept CopyConstructible = requires(const C& c) {
+concept CopyConstructible = requires(const C& c) 
+{
     { C(c) } -> std::same_as<C>;
 };
 

@@ -6,9 +6,9 @@
 #include <initializer_list>
 #include <memory>
 
-#include "../iterator/iterator.h"
-#include "../iterator/const_iterator.h"
-#include "../iterator/base_iterator.h"
+#include "iterator.h"
+#include "const_iterator.h"
+#include "base_iterator.h"
 
 template<CopyMoveAssignable T>
 class List: public baseList
@@ -28,7 +28,7 @@ public:
 public:
     #pragma region List
 
-    List();
+    List() noexcept;
 
     explicit List(const List<T> &list);
 
@@ -47,16 +47,16 @@ public:
     List(It beg, S end);
 
     template <ConvertibleContainer<T> C>
-    List(const C& other);
+    explicit List(const C& other);
 
     template <PureRange <T> R>
-    List(const R& range);
+    explicit List(const R& range);
 
     template <ConvertibleContainer<T> C>
-    List(C&& other);
+    explicit List(C&& other);
 
     template <PureRange <T> R>
-    List(R&& range);
+    explicit List(R&& range);
 
     #pragma endregion
     
@@ -64,12 +64,17 @@ public:
 
 
     #pragma region =
+
     List<T> &operator=(const List<T> &list);
+
     List<T> &operator=(List<T> &&list);
+
     template<Convertible<T> U>
     List<T> &operator=(std::initializer_list<U> initializer_list);
+
     template <PureRange<T> R>
     List<T> &operator=(const R &range);
+
     template <ConvertibleContainer<T> C>
     List<T> &operator=(const C &list);
 
@@ -146,27 +151,41 @@ public:
 
 
 
-    #pragma region plus
+    #pragma region +
 
-    template<ConvertibleContainer<T> C>
-    List<T> plus(const C &other) const;    
-    template<PureRange<T> R>
-    List<T> plus(const R& range) const;
-    template<ConvertibleContainer<T> C>
-    List<T> plus(C &&other) const;
-    template<Convertible<T> U>
-    List<T> plus(const U &value) const;
-    template<Convertible<T> U>
-    List<T> plus(U &&value) const;
+    template <Convertible<T> U>
+    List<T> operator+(const U& value) const;
+
+    template <Convertible<T> U>
+    List<T> operator+(U&& value) const;
+
+    template <ConvertibleContainer<T> C>
+    List<T> operator+(const C& other) const;
+
+    template <ConvertibleContainer<T> C>
+    List<T> operator+(C&& other) const;
+
+    template <PureRange<T> R>
+    List<T> operator+(const R& range) const;
+
+    template <CopyMoveAssignable U, Convertible<U> V>
+    friend List<U> operator+(const V& value, const List<U>& list);
+
+    template <CopyMoveAssignable U, Convertible<U> V>
+    friend List<U> operator+(V&& value, const List<U>& list);
 
     template<ConvertibleContainer<T> C>
     List<T> &operator+=(const C &other);
+
     template<PureRange<T> R>
     List<T> &operator+=(const R& range);
+
     template<Convertible<T> U>
     List<T> &operator+=(std::initializer_list<U> other);
+
     template<Convertible<T> U>
     List<T> &operator+=(const U &value);
+
     template<Convertible<T> U>
     List<T> &operator+=(U &&value);
 
@@ -179,18 +198,25 @@ public:
 
     template<Convertible<T> U>
     List<T>& insert_after(const_iterator pos,  std::initializer_list<U> list);
+
     template<Convertible<T> U>
     List<T>& insert_after(const_iterator pos, size_t count, const U &value);
+
     template<Convertible<T> U>
     List<T>& insert_after(const_iterator pos, size_t count, U &&value);
+
     template<Convertible<T> U>
     List<T>& insert_after(const_iterator pos, const U &value);
+
     template<Convertible<T> U>
     List<T>& insert_after(const_iterator pos, U &&value);
+
     template <ConvertibleContainer<T> C>
     List<T>& insert_after(const_iterator pos, const C& other);
+
     template<PureRange<T> R>
     List<T>& insert_after(const_iterator pos, const R& range);
+
     template <ConvertibleInputIterator<T> It>
     List<T>& insert_after(const_iterator pos, It beg, It end);
 
@@ -252,6 +278,7 @@ public:
 
     template <EqualityComparable<T> U>
     bool operator==(const List<U>& other) const noexcept;
+    
     template <EqualityComparable<T> U>
     bool operator!=(const List<U>& other) const noexcept;
 
@@ -265,13 +292,12 @@ protected:
     class Node
     {
     public:
-        Node(const T &value) noexcept(std::is_nothrow_copy_constructible_v<T>);
-        Node(T &&value) noexcept(std::is_nothrow_move_constructible_v<T>);
+        explicit Node(const T &value) noexcept(std::is_nothrow_copy_constructible_v<T>);
+        explicit Node(T &&value) noexcept(std::is_nothrow_move_constructible_v<T>);
         Node(std::shared_ptr<Node> cur, T d);
 
-
-        Node(const Node &) noexcept;
-        Node(Node &&) noexcept;
+        explicit Node(const Node &) noexcept;
+        explicit Node(Node &&) noexcept;
 
         bool operator==(const Node &other) const noexcept;
         bool operator!=(const Node &other) const noexcept;
@@ -306,6 +332,12 @@ private:
 
 template<CopyMoveAssignable T>
 std::ostream &operator<<(std::ostream &os, const List<T> &list);
+
+template <CopyMoveAssignable U, Convertible<U> V>
+List<U> operator+(const V& value, const List<U>& list);
+
+template <CopyMoveAssignable U, Convertible<U> V>
+List<U> operator+(V&& value, const List<U>& list);
 
 #include "node.hpp"
 #include "list.hpp"

@@ -1,23 +1,11 @@
 #include "exceptions.h"
+#include <cstdio>
 
-BaseException::BaseException(const char *filename, const char *classname, const char *methodname) noexcept
+BaseException::BaseException(const char* file, const char* func, const char* reason) noexcept 
 {
-    sprintf(msg, "Error occured! File : %s Classname : %s, Method : %s", filename, classname, methodname);
+    std::snprintf(msg_, sizeof(msg_), "[%s:%s] %s", file, func, reason);
 }
-
-const char *BaseException::what() const noexcept 
+const char* BaseException::what() const noexcept 
 {
-    return msg;
+    return msg_;
 }
-
-IteratorException::IteratorException(const char *filename, const char *classname, const char *methodname) noexcept : 
-            BaseException(filename, classname, methodname) {}
-
-TransmittedIteratorException::TransmittedIteratorException(const char *filename, const char *classname, const char *methodname) noexcept : 
-            BaseException(filename, classname, methodname) {}
-
-MemoryException::MemoryException(const char *filename, const char *classname, const char *methodname) noexcept : 
-            BaseException(filename, classname, methodname) {}
-
-EmptyListException::EmptyListException(const char *filename, const char *classname, const char *methodname) noexcept : 
-            BaseException(filename, classname, methodname) {}

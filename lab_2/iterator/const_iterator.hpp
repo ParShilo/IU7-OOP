@@ -102,5 +102,5 @@ template <CopyMoveAssignable T>
 void ConstIterator<T>::validate_ptr() const 
 {
     if (!this->ptr.lock())
-        throw IteratorException(__FILE__, typeid(ConstIterator<T>).name(), __FUNCTION__);
+        throw InvalidIteratorException(__FILE__, __FUNCTION__);
 };

@@ -1,11 +1,47 @@
 COMPILER_NAME := g++
 CPPFLAGS := -std=c++20 -Wall -Wextra -Wpedantic
 
-app.exe: main.cpp list/list.h list/list.hpp list/base_list.h list/base_list.hpp list/node.hpp list/list_concepts.h exception/exceptions.cpp exception/exceptions.h  iterator/base_iterator.h iterator/base_iterator.hpp iterator/const_iterator.h iterator/const_iterator.hpp iterator/iterator.h iterator/iterator.hpp
-	$(COMPILER_NAME) $(CPPFLAGS) main.cpp exception/exceptions.cpp -o app.exe
+# Говорим компилятору, где искать заголовки
+INCLUDES := -I. -Ilist -Iiterator -Iexception
 
-.PHONY: clean
+# Папка для объектных файлов
+OBJ_DIR := obj
+
+# Объектные файлы
+OBJS := $(OBJ_DIR)/main.o $(OBJ_DIR)/exceptions.o
+
+# Все заголовки (для зависимостей)
+HEADERS := $(wildcard list/*.h) \
+           $(wildcard list/*.hpp) \
+           $(wildcard iterator/*.h) \
+           $(wildcard iterator/*.hpp) \
+           $(wildcard exception/*.h)
+
+# Итоговый файл
+TARGET := app.exe
+
+.PHONY: all clean run
+
+all: $(TARGET)
+
+# Сборка (линковка)
+$(TARGET): $(OBJS)
+	$(COMPILER_NAME) $(CPPFLAGS) -o $@ $^
+
+# Компиляция main.cpp
+$(OBJ_DIR)/main.o: main.cpp $(HEADERS) | $(OBJ_DIR)
+	$(COMPILER_NAME) $(CPPFLAGS) $(INCLUDES) -c -o $@ $<
+
+# Компиляция exceptions.cpp
+$(OBJ_DIR)/exceptions.o: exception/exceptions.cpp exception/exceptions.h | $(OBJ_DIR)
+	$(COMPILER_NAME) $(CPPFLAGS) $(INCLUDES) -c -o $@ $<
+
+# Создание папки obj
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+run: $(TARGET)
+	./$(TARGET)
 
 clean:
-	rm -f *.o
-	rm -f *.exe
+	rm -rf $(OBJ_DIR) $(TARGET)

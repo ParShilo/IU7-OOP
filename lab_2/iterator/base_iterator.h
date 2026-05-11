@@ -2,7 +2,8 @@
 #define BASE_ITERATOR_H
 
 #include <memory>
-#include "../list/list_concepts.h"
+#include <iterator>
+#include "list_concepts.h"
 
 template <CopyMoveAssignable T>
 class List;
@@ -11,8 +12,12 @@ template <CopyMoveAssignable T>
 class BaseIterator 
 {
 public:
+    using value_type = T;
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+
     BaseIterator() = default;
-    operator bool() const noexcept;
+    explicit operator bool() const noexcept;
     virtual ~BaseIterator() = 0;
 
 protected:
