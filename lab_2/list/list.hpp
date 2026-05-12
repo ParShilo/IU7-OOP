@@ -16,13 +16,13 @@ List<T>::List(const List<T>& list)
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-List<T>::List(const U* array, const size_t size)
+List<T>::List(const U* array, size_type size)
 {
     std::ranges::for_each(array, array + size, [this](const T& value) { push_back(value); });
 }
 
 template <CopyMoveAssignable T>
-List<T>::List(List<T>&& list)
+List<T>::List(List<T>&& list) noexcept
 {
     len = list.len;
     head = std::move(list.head);
@@ -47,7 +47,7 @@ List<T>::List(std::initializer_list<U> initializer_list)
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-List<T>::List(const size_t size, const U& value)  
+List<T>::List(const size_type size, const U& value)  
 {
     for (size_t i = 0; i < size; ++i) 
     {
@@ -56,8 +56,15 @@ List<T>::List(const size_t size, const U& value)
 }
 
 template <CopyMoveAssignable T>
-template <ConvertibleContainer<T> C>
+template <SameTypeContainer<T> C>
 List<T>::List(const C& other) 
+{
+    push_back(other);
+}
+
+template <CopyMoveAssignable T>
+template <SameTypeContainer<T> C>
+List<T>::List(C&& other)
 {
     push_back(other);
 }
@@ -74,13 +81,6 @@ template <PureRange <T> R>
 List<T>::List(R&& range)
 {
     push_back(range);
-}
-
-template <CopyMoveAssignable T>
-template <ConvertibleContainer<T> C>
-List<T>::List(C&& other)
-{
-    push_back(other);
 }
 
 #pragma endregion
@@ -100,7 +100,7 @@ List<T>& List<T>::operator=(const List<T>& other)
 } 
 
 template <CopyMoveAssignable T>
-List<T>& List<T>::operator=(List<T>&& other) 
+List<T>& List<T>::operator=(List<T>&& other)  noexcept
 {
     clear();
     len = std::move(other.len);
@@ -129,7 +129,7 @@ List<T>& List<T>::operator=(const R& range)
 }
 
 template <CopyMoveAssignable T>
-template <ConvertibleContainer<T> C>
+template <SameTypeContainer<T> C>
 List<T>& List<T>::operator=(const C& list)  
 {
     clear();
@@ -210,6 +210,13 @@ void List<T>::push_back(const R& range)
         push_back(it);
 }
 
+template <CopyMoveAssignable T>
+template <PureRange<T> R>
+void List<T>::push_back(R&& range)
+{
+    std::ranges::for_each(std::forward<R>(range), [this](auto&& value) {push_back(std::forward<decltype(value)>(value));});
+}
+
 #pragma endregion
 
 
@@ -285,12 +292,22 @@ void List<T>::push_front(const R& range)
         push_front(it);
 }
 
+template <CopyMoveAssignable T>
+template <PureRange<T> R>
+void List<T>::push_front(R&& range)
+{
+    std::ranges::for_each(
+        std::forward<R>(range),
+        [this](auto&& value) { push_front(std::forward<decltype(value)>(value)); }
+    );
+}
+
 #pragma endregion
 
 
 
 
-#pragma region plus
+#pragma region +
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
@@ -334,6 +351,15 @@ List<T> List<T>::operator+(const R& range) const
 {
     List<T> copy(*this);
     copy.push_back(range);
+    return copy;
+}
+
+template <CopyMoveAssignable T>
+template <PureRange<T> R>
+List<T> List<T>::operator+(R&& range) const
+{
+    List<T> copy(*this);
+    copy.push_back(std::forward<R>(range));
     return copy;
 }
 
@@ -388,10 +414,26 @@ List<T>& List<T>::operator+=(const C& other)
 }
 
 template <CopyMoveAssignable T>
+template <ConvertibleContainer<T> C>
+List<T>& List<T>::operator+=(C&& other)
+{
+    push_back(std::forward<C>(other));
+    return *this;
+}
+
+template <CopyMoveAssignable T>
 template<PureRange<T> R>
 List<T>& List<T>::operator+=(const R& range)
 {
     std::ranges::for_each(range, [&](const T& value) {push_back(value);});
+    return *this;
+}
+
+template <CopyMoveAssignable T>
+template <PureRange<T> R>
+List<T>& List<T>::operator+=(R&& range)
+{
+    push_back(std::forward<R>(range));
     return *this;
 }
 
@@ -431,7 +473,7 @@ List<T>& List<T>::insert_after(const_iterator pos, U&& value)
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-List<T>& List<T>::insert_after(const_iterator pos, size_t count, const U& value)
+List<T>& List<T>::insert_after(const_iterator pos, size_type count, const U& value)
 {
     if (!pos)
         throw InvalidIteratorException(__FILE__, __FUNCTION__);
@@ -449,7 +491,7 @@ List<T>& List<T>::insert_after(const_iterator pos, size_t count, const U& value)
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-List<T>& List<T>::insert_after(const_iterator pos, size_t count, U&& value)
+List<T>& List<T>::insert_after(const_iterator pos, size_type count, U&& value)
 {    
     if (!pos)
         throw InvalidIteratorException(__FILE__, __FUNCTION__);
@@ -660,7 +702,7 @@ List<T>& List<T>::erase(const_iterator first, const_iterator last)
 }
 
 template <CopyMoveAssignable T>
-List<T>& List<T>::erase(const_iterator beg, size_t size)
+List<T>& List<T>::erase(const_iterator beg, size_type size)
 {
     if (size == 0)
         return *this;
@@ -681,7 +723,7 @@ List<T>& List<T>::erase(const_iterator beg, size_t size)
 }
 
 template <CopyMoveAssignable T>
-void List<T>::resize(const size_t count) 
+void List<T>::resize(const size_type count) 
 {
     if (count == len) return;
 
@@ -706,7 +748,7 @@ void List<T>::resize(const size_t count)
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-void List<T>::resize(const size_t count, const U& value) 
+void List<T>::resize(const size_type count, const U& value) 
 {
     if (count < len)
         resize(count);
@@ -747,12 +789,12 @@ void List<T>::reverse() noexcept
 }
 
 template <CopyMoveAssignable T>
-int List<T>::unique() noexcept 
+size_t List<T>::unique() noexcept 
 {
     if (empty())
         return 0;
 
-    int amount_of_deleted = 0;
+    size_t amount_of_deleted = 0;
     auto current = begin();
 
     while (current && current.get_node()->get_next()) 
@@ -898,38 +940,44 @@ void List<T>::clear() noexcept
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-std::shared_ptr<typename List<T>::Node> List<T>::allocate_node(const U& data) const 
+std::shared_ptr<typename List<T>::Node> List<T>::allocate_node(const U& data) const
 {
-    std::shared_ptr<Node> new_node = nullptr;
-
-    try 
-    {
-        new_node = std::make_shared<Node>(data);
-    } 
-    catch (std::bad_alloc& ex) 
-    {
-        throw MemoryException(__FILE__, __FUNCTION__);
-    }
-    
-    return new_node;
+    return allocate_node(nullptr, data);
 }
 
 template <CopyMoveAssignable T>
 template <Convertible<T> U>
-std::shared_ptr<typename List<T>::Node> List<T>::allocate_node(U&& data) const 
+std::shared_ptr<typename List<T>::Node> List<T>::allocate_node(U&& data) const
 {
-    std::shared_ptr<Node> new_node = nullptr;
+    return allocate_node(nullptr, std::forward<U>(data));
+}
 
-    try 
+template <CopyMoveAssignable T>
+template <Convertible<T> U>
+std::shared_ptr<typename List<T>::Node> List<T>::allocate_node(std::shared_ptr<Node> next_node, const U& data) const
+{
+    try
     {
-        new_node = std::make_shared<Node>(std::move(data));
-    } 
-    catch (std::bad_alloc& ex) 
+        return std::make_shared<Node>(std::move(next_node), data);
+    }
+    catch (const std::bad_alloc&)
     {
         throw MemoryException(__FILE__, __FUNCTION__);
     }
+}
 
-    return new_node;
+template <CopyMoveAssignable T>
+template <Convertible<T> U>
+std::shared_ptr<typename List<T>::Node> List<T>::allocate_node(std::shared_ptr<Node> next_node, U&& data) const
+{
+    try
+    {
+        return std::make_shared<Node>(std::move(next_node), std::forward<U>(data));
+    }
+    catch (const std::bad_alloc&)
+    {
+        throw MemoryException(__FILE__, __FUNCTION__);
+    }
 }
 
 #pragma endregion
@@ -963,7 +1011,7 @@ bool List<T>::operator!=(const List<U>& other) const noexcept
 }
 
 template <CopyMoveAssignable T>
-void List<T>::link_nodes(const_iterator from, const_iterator to) 
+void List<T>::link_nodes(const_iterator from, const_iterator to)
 {
     if (!from || !to) 
     {

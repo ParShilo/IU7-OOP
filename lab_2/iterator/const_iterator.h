@@ -23,7 +23,7 @@ public:
     ConstIterator(const Iterator<T>& other) noexcept;
     ConstIterator(ConstIterator&& other) noexcept;
     ConstIterator(Iterator<T>&& other) noexcept;
-    ConstIterator(const std::shared_ptr<typename List<T>::Node>& ptr) noexcept;
+    explicit ConstIterator(const std::shared_ptr<typename List<T>::Node>& ptr) noexcept;
     #pragma endregion
 
     ConstIterator& operator=(const ConstIterator& other) noexcept;

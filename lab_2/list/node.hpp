@@ -7,28 +7,26 @@
 template <CopyMoveAssignable T>
 class List;
 
-template<CopyMoveAssignable T>
-List<T>::Node::Node(const T &value) noexcept(std::is_nothrow_copy_constructible_v<T>)
+template <CopyMoveAssignable T>
+List<T>::Node::Node(std::shared_ptr<Node> next_node, const_reference value) noexcept(std::is_nothrow_copy_constructible_v<T>)
     : value(value)
-    , next(nullptr)
+    , next(std::move(next_node))
 {}
 
-template<CopyMoveAssignable T>
-List<T>::Node::Node(T &&value) noexcept(std::is_nothrow_move_constructible_v<T>)
+template <CopyMoveAssignable T>
+List<T>::Node::Node(std::shared_ptr<Node> next_node, value_type&& value) noexcept(std::is_nothrow_move_constructible_v<T>)
     : value(std::move(value))
-    , next(nullptr)
+    , next(std::move(next_node))
 {}
 
-template<CopyMoveAssignable T>
-List<T>::Node::Node(const Node &other) noexcept
-    : value(other.value)
-    , next(other.next)
+template <CopyMoveAssignable T>
+List<T>::Node::Node(const_reference value) noexcept(std::is_nothrow_copy_constructible_v<T>)
+    : Node(nullptr, value)
 {}
 
-template<CopyMoveAssignable T>
-List<T>::Node::Node(Node &&other) noexcept
-    : value(std::move(other.value))
-    , next(std::move(other.next))
+template <CopyMoveAssignable T>
+List<T>::Node::Node(value_type&& value) noexcept(std::is_nothrow_move_constructible_v<T>)
+    : Node(nullptr, std::move(value))
 {}
 
 template<CopyMoveAssignable T>

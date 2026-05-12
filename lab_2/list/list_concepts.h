@@ -32,11 +32,8 @@ template <typename C>
 concept Container = CopyConstructible<C> && std::move_constructible<C> && std::destructible<C> && requires(C c)
 {
     typename C::value_type;
-    typename C::reference;
-    typename C::const_reference;
     typename C::iterator;
     typename C::const_iterator;
-    typename C::difference_type;
     typename C::size_type;
 
     { c.begin() } noexcept -> std::same_as<typename C::iterator>;
@@ -49,6 +46,9 @@ concept Container = CopyConstructible<C> && std::move_constructible<C> && std::d
     { c.empty() } noexcept -> std::same_as<bool>;
 };
 
+template <typename C, typename T>
+concept SameTypeContainer = Container<C> && std::same_as<typename C::value_type, T>;
+
 template <typename R, typename T>
 concept ConvertibleRange = Ranges<R> && Convertible<std::ranges::range_value_t<R>, T>;
 
@@ -59,9 +59,7 @@ template <typename C, typename T>
 concept ConvertibleContainer = Container<C> && Convertible<typename C::value_type, T>;
 
 template <typename It, typename T>
-concept ConvertibleInputIterator = 
-    InputIterator<It> && 
-    Convertible<typename It::value_type, T>;
+concept ConvertibleInputIterator = InputIterator<It> && Convertible<typename It::value_type, T>;
 
 template <typename S, typename It>
 concept Sentinel = std::sentinel_for<S, It>;

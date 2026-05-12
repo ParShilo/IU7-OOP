@@ -10,6 +10,12 @@
 #include "const_iterator.h"
 #include "base_iterator.h"
 
+// ✅ Стиль с алиасами
+// ✅ Для конструктора по контейнеру и присваивания нужно шаблон не convertable а тот же тип
+// ✅ Расставить noexcept
+// ✅ Нода ...... Обёртка, возвращающая ноду
+// ✅ Для range аналогичные перегрузки как для container
+
 template<CopyMoveAssignable T>
 class List: public baseList
 {
@@ -32,30 +38,30 @@ public:
 
     explicit List(const List<T> &list);
 
-    List(List<T> &&list);
+    List(List<T> &&list) noexcept; 
 
     template<Convertible<T> U>
     explicit List(std::initializer_list<U> initializer_list);
 
     template<Convertible<T> U>
-    List(const U *array, const size_t size);
+    List(const U *array, const size_type size);
 
     template <Convertible<T> U>
-    List(const size_t size, const U& value);
+    List(const size_type size, const U& value);
 
     template<ConvertibleInputIterator<T> It, Sentinel<It> S>
     List(It beg, S end);
 
-    template <ConvertibleContainer<T> C>
+    template <SameTypeContainer<T> C> // <---
     explicit List(const C& other);
 
-    template <PureRange <T> R>
-    explicit List(const R& range);
-
-    template <ConvertibleContainer<T> C>
+    template <SameTypeContainer<T> C> // <---
     explicit List(C&& other);
 
-    template <PureRange <T> R>
+    template <PureRange<T> R>
+    explicit List(const R& range);
+
+    template <PureRange<T> R>
     explicit List(R&& range);
 
     #pragma endregion
@@ -67,7 +73,7 @@ public:
 
     List<T> &operator=(const List<T> &list);
 
-    List<T> &operator=(List<T> &&list);
+    List<T> &operator=(List<T> &&list) noexcept;
 
     template<Convertible<T> U>
     List<T> &operator=(std::initializer_list<U> initializer_list);
@@ -75,7 +81,7 @@ public:
     template <PureRange<T> R>
     List<T> &operator=(const R &range);
 
-    template <ConvertibleContainer<T> C>
+    template <SameTypeContainer<T> C> // <---
     List<T> &operator=(const C &list);
 
     ~List() = default;
@@ -105,6 +111,10 @@ public:
     template <PureRange<T> R>
     void push_back(const R& range);
 
+    // 
+    template <PureRange<T> R> 
+    void push_back(R&& range);  
+
     #pragma endregion
 
 
@@ -129,6 +139,10 @@ public:
 
     template <PureRange<T> R>
     void push_front(const R& range);
+
+    //
+    template <PureRange<T> R>
+    void push_front(R&& range); 
 
     #pragma endregion
 
@@ -168,17 +182,35 @@ public:
     template <PureRange<T> R>
     List<T> operator+(const R& range) const;
 
+    //
+    template <PureRange<T> R>
+    List<T> operator+(R&& range) const;
+
     template <CopyMoveAssignable U, Convertible<U> V>
     friend List<U> operator+(const V& value, const List<U>& list);
 
     template <CopyMoveAssignable U, Convertible<U> V>
     friend List<U> operator+(V&& value, const List<U>& list);
 
+    #pragma endregion
+
+
+
+
+    #pragma region +=
+
     template<ConvertibleContainer<T> C>
     List<T> &operator+=(const C &other);
 
+    template <ConvertibleContainer<T> C>
+    List<T> &operator+=(C&& other);
+
     template<PureRange<T> R>
     List<T> &operator+=(const R& range);
+
+    //
+    template<PureRange<T> R>
+    List<T> &operator+=(R&& range); 
 
     template<Convertible<T> U>
     List<T> &operator+=(std::initializer_list<U> other);
@@ -200,10 +232,10 @@ public:
     List<T>& insert_after(const_iterator pos,  std::initializer_list<U> list);
 
     template<Convertible<T> U>
-    List<T>& insert_after(const_iterator pos, size_t count, const U &value);
+    List<T>& insert_after(const_iterator pos, size_type count, const U &value);
 
     template<Convertible<T> U>
-    List<T>& insert_after(const_iterator pos, size_t count, U &&value);
+    List<T>& insert_after(const_iterator pos, size_type count, U &&value);
 
     template<Convertible<T> U>
     List<T>& insert_after(const_iterator pos, const U &value);
@@ -230,7 +262,7 @@ public:
 
     List<T>& erase(const_iterator pos);
     List<T>& erase(const_iterator first, const_iterator last);
-    List<T>& erase(const_iterator beg, size_t size);
+    List<T>& erase(const_iterator beg, size_type size);
     void pop_back();
     void pop_front();
 
@@ -243,12 +275,12 @@ public:
     #pragma region special_methods
 
     void reverse() noexcept;
-    int unique() noexcept;
+    size_type unique() noexcept;
 
-    void resize(const size_t count);
+    void resize(const size_type count);
 
     template<Convertible<T> U>
-    void resize(const size_t count, const U &value);
+    void resize(size_type count, const U &value);
 
     void swap(List<T> &other) noexcept;
 
@@ -292,12 +324,14 @@ protected:
     class Node
     {
     public:
-        explicit Node(const T &value) noexcept(std::is_nothrow_copy_constructible_v<T>);
-        explicit Node(T &&value) noexcept(std::is_nothrow_move_constructible_v<T>);
-        Node(std::shared_ptr<Node> cur, T d);
+        Node(std::shared_ptr<Node> next_node, const_reference value) noexcept(std::is_nothrow_copy_constructible_v<T>);
+        Node(std::shared_ptr<Node> next_node, value_type&& value) noexcept(std::is_nothrow_move_constructible_v<T>);
 
-        explicit Node(const Node &) noexcept;
-        explicit Node(Node &&) noexcept;
+        explicit Node(const_reference value) noexcept(std::is_nothrow_copy_constructible_v<T>);
+        explicit Node(value_type&& value) noexcept(std::is_nothrow_move_constructible_v<T>);
+
+        Node(const Node&) = default;
+        Node(Node&&) noexcept(std::is_nothrow_move_constructible_v<T>) = default;
 
         bool operator==(const Node &other) const noexcept;
         bool operator!=(const Node &other) const noexcept;
@@ -305,21 +339,30 @@ protected:
         void set_next(std::shared_ptr<Node> other) noexcept;
         std::shared_ptr<Node> get_next() const noexcept;
 
-        T &get_value() noexcept;
-        const T &get_value() const noexcept;
+        value_type &get_value() noexcept;
+        const value_type &get_value() const noexcept;
 
     private:
-        T value;
+        value_type value;
         std::shared_ptr<Node> next;
     };
 
 
 private:
     #pragma region allocation_methods
+
     template<Convertible<T> U>
-    std::shared_ptr<Node> allocate_node(const U &data) const;
+    std::shared_ptr<Node> allocate_node(const U& data) const;
+
     template<Convertible<T> U>
-    std::shared_ptr<Node> allocate_node(U &&data) const;
+    std::shared_ptr<Node> allocate_node(U&& data) const;
+
+    template<Convertible<T> U>
+    std::shared_ptr<Node> allocate_node(std::shared_ptr<Node> next_node, const U& data) const;
+
+    template<Convertible<T> U>
+    std::shared_ptr<Node> allocate_node(std::shared_ptr<Node> next_node, U&& data) const;
+
     #pragma endregion
 
     void check_null_list() const;
@@ -341,5 +384,8 @@ List<U> operator+(V&& value, const List<U>& list);
 
 #include "node.hpp"
 #include "list.hpp"
+
+static_assert(std::forward_iterator<Iterator<int>>);
+static_assert(std::forward_iterator<ConstIterator<int>>);
 
 #endif
