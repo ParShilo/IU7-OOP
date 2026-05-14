@@ -56,7 +56,7 @@ List<T>::List(const size_type size, const U& value)
 }
 
 template <CopyMoveAssignable T>
-template <SameTypeContainer<T> C>
+template <ConvertibleContainer<T> C>
 List<T>::List(const C& other) 
 {
     push_back(other);
@@ -1001,13 +1001,6 @@ bool List<T>::operator==(const List<U>& other) const noexcept
         if (*i != *j)
             return false;
     return true;
-}
-
-template <CopyMoveAssignable T>
-template <EqualityComparable<T> U>
-bool List<T>::operator!=(const List<U>& other) const noexcept
-{
-    return !(*this == other);
 }
 
 template <CopyMoveAssignable T>

@@ -36,7 +36,6 @@ public:
     ConstIterator operator++(int) noexcept;
 
     bool operator==(const ConstIterator<T>& other) const noexcept;
-    bool operator!=(const ConstIterator<T>& other) const noexcept;
 
     void validate_ptr() const;
 

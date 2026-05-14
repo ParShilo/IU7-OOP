@@ -10,17 +10,11 @@
 #include "const_iterator.h"
 #include "base_iterator.h"
 
-// ✅ Стиль с алиасами
-// ✅ Для конструктора по контейнеру и присваивания нужно шаблон не convertable а тот же тип
-// ✅ Расставить noexcept
-// ✅ Нода ...... Обёртка, возвращающая ноду
-// ✅ Для range аналогичные перегрузки как для container
-
 template<CopyMoveAssignable T>
 class List: public baseList
 {
 public:
-#pragma region aliases
+    #pragma region aliases
     using value_type = T;
     using reference = T&;
     using const_reference = const T&;
@@ -28,7 +22,7 @@ public:
     using const_iterator = ConstIterator<T>;
     using difference_type = ptrdiff_t;
     using size_type = size_t;
-#pragma endregion
+    #pragma endregion
 
 
 public:
@@ -52,7 +46,7 @@ public:
     template<ConvertibleInputIterator<T> It, Sentinel<It> S>
     List(It beg, S end);
 
-    template <SameTypeContainer<T> C> // <---
+    template <ConvertibleContainer<T> C>
     explicit List(const C& other);
 
     template <SameTypeContainer<T> C> // <---
@@ -61,6 +55,7 @@ public:
     template <PureRange<T> R>
     explicit List(const R& range);
 
+    // Аналогично с range. Добавить концепт SameTypeRange
     template <PureRange<T> R>
     explicit List(R&& range);
 
@@ -81,7 +76,7 @@ public:
     template <PureRange<T> R>
     List<T> &operator=(const R &range);
 
-    template <SameTypeContainer<T> C> // <---
+    template <SameTypeContainer<T> C>
     List<T> &operator=(const C &list);
 
     ~List() = default;
@@ -111,7 +106,6 @@ public:
     template <PureRange<T> R>
     void push_back(const R& range);
 
-    // 
     template <PureRange<T> R> 
     void push_back(R&& range);  
 
@@ -140,7 +134,6 @@ public:
     template <PureRange<T> R>
     void push_front(const R& range);
 
-    //
     template <PureRange<T> R>
     void push_front(R&& range); 
 
@@ -182,7 +175,6 @@ public:
     template <PureRange<T> R>
     List<T> operator+(const R& range) const;
 
-    //
     template <PureRange<T> R>
     List<T> operator+(R&& range) const;
 
@@ -208,7 +200,6 @@ public:
     template<PureRange<T> R>
     List<T> &operator+=(const R& range);
 
-    //
     template<PureRange<T> R>
     List<T> &operator+=(R&& range); 
 
@@ -310,9 +301,6 @@ public:
 
     template <EqualityComparable<T> U>
     bool operator==(const List<U>& other) const noexcept;
-    
-    template <EqualityComparable<T> U>
-    bool operator!=(const List<U>& other) const noexcept;
 
 protected:
     #pragma region friends
@@ -324,6 +312,7 @@ protected:
     class Node
     {
     public:
+        // Один метод обёртка для создания узла
         Node(std::shared_ptr<Node> next_node, const_reference value) noexcept(std::is_nothrow_copy_constructible_v<T>);
         Node(std::shared_ptr<Node> next_node, value_type&& value) noexcept(std::is_nothrow_move_constructible_v<T>);
 
@@ -334,7 +323,6 @@ protected:
         Node(Node&&) noexcept(std::is_nothrow_move_constructible_v<T>) = default;
 
         bool operator==(const Node &other) const noexcept;
-        bool operator!=(const Node &other) const noexcept;
 
         void set_next(std::shared_ptr<Node> other) noexcept;
         std::shared_ptr<Node> get_next() const noexcept;
@@ -387,5 +375,6 @@ List<U> operator+(V&& value, const List<U>& list);
 
 static_assert(std::forward_iterator<Iterator<int>>);
 static_assert(std::forward_iterator<ConstIterator<int>>);
+static_assert(Container<List<int>>);
 
 #endif

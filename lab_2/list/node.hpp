@@ -36,12 +36,6 @@ bool List<T>::Node::operator==(const Node &other) const noexcept
 }
 
 template<CopyMoveAssignable T>
-bool List<T>::Node::operator!=(const Node &other) const noexcept
-{
-    return value != other.value;
-}
-
-template<CopyMoveAssignable T>
 void List<T>::Node::set_next(std::shared_ptr<Node> other) noexcept
 {
     next = other;

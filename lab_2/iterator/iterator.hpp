@@ -80,12 +80,6 @@ bool Iterator<T>::operator==(const Iterator<T>& other) const noexcept
 }
 
 template <CopyMoveAssignable T>
-bool Iterator<T>::operator!=(const Iterator<T>& other) const noexcept 
-{
-    return this->ptr.lock() != other.ptr.lock();
-}
-
-template <CopyMoveAssignable T>
 void Iterator<T>::validate_ptr() const 
 {
     if (!this->ptr.lock())
